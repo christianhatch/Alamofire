@@ -474,7 +474,7 @@ open class DownloadRequest: Request {
         NotificationCenter.default.post(
             name: Notification.Name.Task.DidCancel,
             object: self,
-            userInfo: [Notification.Key.Task: task]
+            userInfo: [Notification.Key.Task: task as Any]
         )
     }
 
@@ -577,27 +577,31 @@ open class UploadRequest: DataRequest {
 
 // MARK: -
 
-#if !os(watchOS)
+//#if !os(watchOS)
+//
+///// Specific type of `Request` that manages an underlying `URLSessionStreamTask`.
+//open class StreamRequest: Request {
+//    enum Streamable: TaskConvertible {
+//        case stream(hostName: String, port: Int)
+//        case netService(NetService)
+//
+//        func task(session: URLSession, adapter: RequestAdapter?, queue: DispatchQueue) throws -> URLSessionTask {
+//            let task: URLSessionTask
+//
+//            switch self {
+//            case let .stream(hostName, port):
+//                task = queue.syncResult { session.streamTask(withHostName: hostName, port: port) }
+//            case let .netService(netService):
+//                task = queue.syncResult { session.streamTask(with: netService) }
+//            }
+//
+//            return task
+//        }
+//    }
+//}
+//
+//#endif
 
-/// Specific type of `Request` that manages an underlying `URLSessionStreamTask`.
-open class StreamRequest: Request {
-    enum Streamable: TaskConvertible {
-        case stream(hostName: String, port: Int)
-        case netService(NetService)
 
-        func task(session: URLSession, adapter: RequestAdapter?, queue: DispatchQueue) throws -> URLSessionTask {
-            let task: URLSessionTask
 
-            switch self {
-            case let .stream(hostName, port):
-                task = queue.syncResult { session.streamTask(withHostName: hostName, port: port) }
-            case let .netService(netService):
-                task = queue.syncResult { session.streamTask(with: netService) }
-            }
 
-            return task
-        }
-    }
-}
-
-#endif
